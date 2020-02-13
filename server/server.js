@@ -39,5 +39,5 @@ app.put('/usuario/:id', function (req, res) {
 });
  
 app.listen(process.env.PORT, () => {
-  console.log('Listening 3000 port');
+  console.log(`Listening ${process.env.PORT} port`);
 });
