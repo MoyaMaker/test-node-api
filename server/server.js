@@ -1,43 +1,30 @@
 require('./config/config.js');
-
 const express = require('express');
-const app = express();
-
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
+const app = express();
+
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }));
  
 // parse application/json
-app.use(bodyParser.json())
- 
-app.get('/usuario', function (req, res) {
-  res.json('Get usuario');
+app.use(bodyParser.json());
+
+app.use( require('./routes/user') );
+
+// Mongoose connection - start
+mongoose.connect(process.env.URL_DB, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
+}, (err, res) => {
+  if (err) console.log(`Connection error: ${err}`);
+
+  console.log('Connection success');
 });
+// Mongoose connection - end
 
-app.post('/usuario', function (req, res) {
-  
-  const body = req.body;
-
-  if (body.nombre === undefined) {
-    res.status(400).json({
-      ok: false,
-      message: "Nombre es requerido"
-    });
-  } else {
-    res.json({ body });
-  }
-});
-
-app.put('/usuario/:id', function (req, res) {
-
-  const id = req.params.id;
-
-  res.json({
-    id
-  });
-});
- 
 app.listen(process.env.PORT, () => {
   console.log(`Listening ${process.env.PORT} port`);
 });
